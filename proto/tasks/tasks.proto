@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package tasks;
+
+option go_package = "github.com/git-217/proj_one-protos/gen;taskspb";
+
+import "google/protobuf/timestamp.proto";
+
+// --- Enums ---
+
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_PENDING     = 1;
+  STATUS_IN_PROGRESS = 2;
+  STATUS_DONE        = 3;
+}
+
+enum Priority {
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_LOW         = 1;
+  PRIORITY_MEDIUM      = 2;
+  PRIORITY_HIGH        = 3;
+}
+
+// --- Core message ---
+
+message Task {
+  string                     id          = 1;
+  string                     title       = 2;
+  string                     description = 3;
+  Status                     status      = 4;
+  Priority                   priority    = 5;
+  google.protobuf.Timestamp  deadline    = 6;
+  google.protobuf.Timestamp  created_at  = 7;
+  google.protobuf.Timestamp  updated_at  = 8;
+}
+
+// --- Requests / Responses ---
+
+message CreateTaskRequest {
+  string   title       = 1;
+  string   description = 2;
+  Priority priority    = 3;
+  google.protobuf.Timestamp deadline = 4;
+}
+
+message CreateTaskResponse {
+  Task task = 1;
+}
+
+message GetTaskRequest {
+  string id = 1;
+}
+
+message GetTaskResponse {
+  Task task = 1;
+}
+
+message UpdateTaskRequest {
+  string   id          = 1;
+  string   title       = 2;
+  string   description = 3;
+  Status   status      = 4;
+  Priority priority    = 5;
+  google.protobuf.Timestamp deadline = 6;
+}
+
+message UpdateTaskResponse {
+  Task task = 1;
+}
+
+message DeleteTaskRequest {
+  string id = 1;
+}
+
+
+message DeleteTaskResponse {}
+
+message ListTasksRequest {
+  Status   filter_status   = 1; // 0 = все статусы
+  Priority filter_priority = 2; // 0 = все приоритеты
+  int32    page_size       = 3; // 0 = без пагинации
+  string   page_token      = 4;
+}
+
+message ListTasksResponse {
+  repeated Task tasks          = 1;
+  string        next_page_token = 2;
+}
+
+// --- Service ---
+
+service TaskService {
+  rpc CreateTask (CreateTaskRequest) returns (CreateTaskResponse);
+  rpc GetTask    (GetTaskRequest)    returns (GetTaskResponse);
+  rpc UpdateTask (UpdateTaskRequest) returns (UpdateTaskResponse);
+  rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse);
+  rpc ListTasks  (ListTasksRequest)  returns (ListTasksResponse);
+}
