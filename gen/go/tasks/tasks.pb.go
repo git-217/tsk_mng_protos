@@ -229,7 +229,7 @@ func (x *Task) GetUpdatedAt() *timestamppb.Timestamp {
 type CreateTaskRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
-	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	Description   *string                `protobuf:"bytes,2,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	Priority      Priority               `protobuf:"varint,3,opt,name=priority,proto3,enum=tasks.Priority" json:"priority,omitempty"`
 	Deadline      *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=deadline,proto3" json:"deadline,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -274,8 +274,8 @@ func (x *CreateTaskRequest) GetTitle() string {
 }
 
 func (x *CreateTaskRequest) GetDescription() string {
-	if x != nil {
-		return x.Description
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
@@ -769,12 +769,13 @@ const file_tasks_tasks_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xb0\x01\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xc5\x01\n" +
 	"\x11CreateTaskRequest\x12\x14\n" +
-	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\x12+\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12%\n" +
+	"\vdescription\x18\x02 \x01(\tH\x00R\vdescription\x88\x01\x01\x12+\n" +
 	"\bpriority\x18\x03 \x01(\x0e2\x0f.tasks.PriorityR\bpriority\x126\n" +
-	"\bdeadline\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\bdeadline\"5\n" +
+	"\bdeadline\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\bdeadlineB\x0e\n" +
+	"\f_description\"5\n" +
 	"\x12CreateTaskResponse\x12\x1f\n" +
 	"\x04task\x18\x01 \x01(\v2\v.tasks.TaskR\x04task\" \n" +
 	"\x0eGetTaskRequest\x12\x0e\n" +
@@ -891,6 +892,7 @@ func file_tasks_tasks_proto_init() {
 	if File_tasks_tasks_proto != nil {
 		return
 	}
+	file_tasks_tasks_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
